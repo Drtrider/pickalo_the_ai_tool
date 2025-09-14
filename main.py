@@ -46,11 +46,7 @@ def main():
     print("Main started!")
 
     # Setup arguments
-    args = setup_arguments()
-
-    if args.verbose:
-        print(f"Using model: {args.model}")
-        print(f"Prompt: {args.prompt}")
+    args = setup_arguments()    
 
     # Import api key from env
     load_dotenv()
@@ -72,9 +68,13 @@ def main():
 
     # Return content
     print(response.text)
-    print(f"Prompt tokens: {response.usage_metadata.prompt_token_count}")
-    print(f"Response tokens: {response.usage_metadata.candidates_token_count}")
 
+    # Additional console output, if --verbose is used
+    if args.verbose:
+        print(f"User prompt: {args.prompt}")
+        print(f"Prompt tokens: {response.usage_metadata.prompt_token_count}")
+        print(f"Response tokens: {response.usage_metadata.candidates_token_count}")
+    
 
 if __name__ == "__main__":
     main()
