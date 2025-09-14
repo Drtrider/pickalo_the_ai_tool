@@ -1,22 +1,56 @@
 import os
 import sys
+import argparse
 from dotenv import load_dotenv
 from google import genai
 from google.genai import types
 
 
+def setup_arguments():
+    """Uses argparse to return a neat little object, that holds the arguments passed into main."""
+
+    # Set up argument parser
+    parser = argparse.ArgumentParser(
+        description="Generate content using Google GenAI",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""
+        Examples:
+        python main.py "Write a poem about cats"
+        python main.py "Explain quantum physics" --verbose
+        """
+    )
+
+    # Add required positional argument
+    parser.add_argument(
+        "prompt",
+        help="The prompt to send to the AI model"
+    )
+
+    # Add optional arguments for future use
+    parser.add_argument(
+        "--verbose", "-v",
+        action="store_true",
+        help="Enable verbose output"
+    )
+
+    parser.add_argument(
+        "--model",
+        default="gemini-2.0-flash-001",
+        help="AI model to use (default: gemini-2.0-flash-001)"
+    )
+
+    return parser.parse_args()
+
+
 def main():
     print("Main started!")
 
-    # Check and manage arguments passed into main.py
-    if len(sys.argv) == 2:
-        user_prompt = sys.argv[1]
-    elif len(sys.argv) == 1:
-        print("ERROR: No input prompt argument provided.")
-        sys.exit(1)
-    else:
-        print("ERROR: Too many aguments given!")
-        sys.exit(1)
+    # Setup arguments
+    args = setup_arguments()
+
+    if args.verbose:
+        print(f"Using model: {args.model}")
+        print(f"Prompt: {args.prompt}")
 
     # Import api key from env
     load_dotenv()
@@ -27,12 +61,12 @@ def main():
 
     # Create list of content
     messages = [
-        types.Content(role="user", parts=[types.Part(text=user_prompt)])
+        types.Content(role="user", parts=[types.Part(text=args.prompt)])
     ]
 
     # Genereate some content
     response = client.models.generate_content(
-        model="gemini-2.0-flash-001",
+        model=args.model,
         contents=messages
     )
 
