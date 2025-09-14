@@ -2,11 +2,12 @@ import os
 import sys
 from dotenv import load_dotenv
 from google import genai
+from google.genai import types
 
 
 def main():
     print("Main started!")
-    
+
     # Check and manage arguments passed into main.py
     if len(sys.argv) == 2:
         user_prompt = sys.argv[1]
@@ -24,10 +25,15 @@ def main():
     # Initialize Google GenAI Client
     client = genai.Client(api_key=api_key)
 
+    # Create list of content
+    messages = [
+        types.Content(role="user", parts=[types.Part(text=user_prompt)])
+    ]
+
     # Genereate some content
     response = client.models.generate_content(
-        model = "gemini-2.0-flash-001",
-        contents = user_prompt
+        model="gemini-2.0-flash-001",
+        contents=messages
     )
 
     # Return content
