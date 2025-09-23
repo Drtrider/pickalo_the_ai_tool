@@ -55,7 +55,7 @@ def main():
     # Initialize Google GenAI Client
     client = genai.Client(api_key=api_key)
 
-    # Create list of content
+    # Create list of content, to be passed into the google api
     messages = [
         types.Content(role="user", parts=[types.Part(text=args.prompt)])
     ]
