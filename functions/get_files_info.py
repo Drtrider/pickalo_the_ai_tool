@@ -10,7 +10,7 @@ def get_files_info(working_directory, directory="."):
     if not os.path.isdir(target_path_abs):
         return f'Error: "{target_path_abs}" is not a directory'
     
-    # If the path of directory is outside the working_directory, return an error
+    # Check if target path is in working dir. If it is, build the return string. Otherwise, reuturn error string
     if target_path_abs.startswith(working_directory_abs):
         return_list = []
 
